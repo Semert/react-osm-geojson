@@ -1,8 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./App.css";
 import * as Data from "./test.json";
-import { MapContainer, TileLayer, LayersControl } from "react-leaflet";
-
+import {
+  MapContainer,
+  TileLayer,
+  CircleMarker,
+  Popup,
+  LayersControl,
+  FeatureGroup,
+  GeoJSON,
+} from "react-leaflet";
 const App = () => {
   const { BaseLayer, Overlay } = LayersControl;
 
@@ -33,6 +40,23 @@ const App = () => {
           <BaseLayer checked={true} name="Dark">
             <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png" />
           </BaseLayer>
+          <Overlay checked={true} name="Poly - without markers">
+            <FeatureGroup>
+              <GeoJSON color="purple" data={Data.default.features} />
+            </FeatureGroup>
+          </Overlay>
+          <Overlay name="yellow Poly - with markers">
+            <GeoJSON color="yellow" data={Data.default.features} />
+          </Overlay>
+          <Overlay name="Marker with popup">
+            <CircleMarker
+              center={[41.00824, 28.978359]}
+              color="red"
+              radius={20}
+            >
+              <Popup>Popup in CircleMarker</Popup>
+            </CircleMarker>
+          </Overlay>
         </LayersControl>
       </MapContainer>
     </div>
