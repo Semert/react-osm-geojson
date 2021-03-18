@@ -13,13 +13,16 @@ import {
   useMap,
 } from "react-leaflet";
 import useGeo from "../hooks/useGeo";
+import CustomGeo from "./CustomGeo";
 
 const Map = () => {
   const { BaseLayer, Overlay } = LayersControl;
   const [myLocation, setMyLocation] = useState(false);
+  const [opacityOfPoint, setOpacityOfPoint] = useState(0);
+  const location = useGeo();
+
   console.log("Test data", Data.default.features[0].geometry.coordinates[0]);
 
-  const location = useGeo();
   return (
     <>
       <MapContainer
@@ -51,11 +54,12 @@ const Map = () => {
           </BaseLayer>
           <Overlay checked={true} name="Poly - without markers">
             <FeatureGroup>
-              <GeoJSON color="purple" data={Data.default.features} />
+              {/* <GeoJSON color="purple" data={Data.default.features} /> */}
+              <CustomGeo color="purple" data={Data.default.features} />
             </FeatureGroup>
           </Overlay>
           <Overlay name="yellow Poly - with markers">
-            <GeoJSON color="yellow" data={Data.default.features} />
+            {/* <GeoJSON color="yellow" data={Data.default.features} /> */}
           </Overlay>
           <Overlay name="Marker with popup">
             <CircleMarker
