@@ -28,7 +28,7 @@ const useGeo = () => {
 
   useEffect(() => {
     if (!("geolocation" in navigator)) {
-      onError({
+      handleError({
         code: 0,
         message: "There is something wrong!",
       });
