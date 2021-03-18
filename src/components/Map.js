@@ -20,11 +20,16 @@ const Map = () => {
   const { BaseLayer, Overlay } = LayersControl;
   const [myLocation, setMyLocation] = useState(false);
   const [opacityOfPoint, setOpacityOfPoint] = useState(0);
+  const [bbox, setBbox] = useState({
+    min_lon: 11.54,
+    min_lat: 48.14,
+    max_lon: 11.541,
+    max_lat: 48.142,
+  });
   const location = useGeo();
-  const osmtogeo = useOsmtoGeo();
+  const osmtogeo = useOsmtoGeo(bbox);
 
-  console.log("mapData", osmtogeo.mapData);
-  console.log("mapData2", osmtogeo);
+  //   console.log("mapData", osmtogeo[0].geometry);
   console.log("Test data", Data.default.features[0].geometry.coordinates[0]);
 
   return (
@@ -56,7 +61,7 @@ const Map = () => {
           <BaseLayer name="Dark">
             <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png" />
           </BaseLayer>
-          <Overlay checked={true} name="Poly - without markers">
+          <Overlay checked={true} name="Purple - without markers">
             <FeatureGroup>
               {/* <GeoJSON color="purple" data={Data.default.features} /> */}
               <CustomGeo
@@ -64,10 +69,16 @@ const Map = () => {
                 data={Data.default.features}
                 pointer={opacityOfPoint}
               />
+              {/* <CustomGeo
+                color="purple"
+                data={osmtogeo}
+                pointer={opacityOfPoint}
+              /> */}
             </FeatureGroup>
           </Overlay>
-          <Overlay name="yellow Poly - with markers">
+          <Overlay name="Yellow - with markers">
             <CustomGeo color="yellow" data={Data.default.features} />
+            {/* <CustomGeo color="yellow" data={osmtogeo} /> */}
           </Overlay>
           <Overlay name="Marker with popup">
             <CircleMarker
