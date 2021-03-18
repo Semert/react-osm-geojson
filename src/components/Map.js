@@ -13,6 +13,7 @@ import {
   useMap,
 } from "react-leaflet";
 import useGeo from "../hooks/useGeo";
+import useOsmtoGeo from "../hooks/useOsmtoGeo";
 import CustomGeo from "./CustomGeo";
 
 const Map = () => {
@@ -20,7 +21,10 @@ const Map = () => {
   const [myLocation, setMyLocation] = useState(false);
   const [opacityOfPoint, setOpacityOfPoint] = useState(0);
   const location = useGeo();
+  const osmtogeo = useOsmtoGeo();
 
+  console.log("mapData", osmtogeo.mapData);
+  console.log("mapData2", osmtogeo);
   console.log("Test data", Data.default.features[0].geometry.coordinates[0]);
 
   return (
@@ -55,11 +59,15 @@ const Map = () => {
           <Overlay checked={true} name="Poly - without markers">
             <FeatureGroup>
               {/* <GeoJSON color="purple" data={Data.default.features} /> */}
-              <CustomGeo color="purple" data={Data.default.features} />
+              <CustomGeo
+                color="purple"
+                data={Data.default.features}
+                pointer={opacityOfPoint}
+              />
             </FeatureGroup>
           </Overlay>
           <Overlay name="yellow Poly - with markers">
-            {/* <GeoJSON color="yellow" data={Data.default.features} /> */}
+            <CustomGeo color="yellow" data={Data.default.features} />
           </Overlay>
           <Overlay name="Marker with popup">
             <CircleMarker

@@ -8,11 +8,31 @@ const CustomGeo = (props) => {
     layer.addData(jsonData);
   }
   function onEachFeature(feature, layer) {
-    if (feature?.properties) {
-      const { name } = feature.properties;
-      console.log("Names", `${name}`);
-      layer.bindPopup(`${name}`);
+    // console.log("featıure", feature);
+    // console.log("layer", layer);
+
+    // if (layer.feature.geometry.type === "LineString") {
+    //   const { name } = feature.properties;
+    //   console.log("Names", `${name}`);
+    //   layer.bindPopup(`${name}`);
+    // }
+
+    if (layer.feature.geometry.type === "Point") {
+      if (props.pointer === 0) {
+        layer.options.opacity = props.pointer;
+      } else {
+        // layer.bindPopup(`${"Selam"}`).on("click", function () {
+        //   alert("Clicked on a member of the group!");
+        // });
+        layer.bindPopup(`${"Selam"}`);
+      }
     }
+
+    // if (feature?.properties) {
+    //   const { name } = feature.properties;
+    //   console.log("Names", `${name}`);
+    //   layer.bindPopup(`${name}`);
+    // }
   }
   useEffect(() => {
     console.log("GeoJson Ref", layerRef);
