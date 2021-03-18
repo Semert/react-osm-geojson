@@ -13,13 +13,16 @@ import {
 const App = () => {
   const { BaseLayer, Overlay } = LayersControl;
 
-  console.log("Test data", Data.default.features);
+  console.log("Test data", Data.default.features[0].geometry.coordinates[0]);
 
   return (
     <div className="App">
       <MapContainer
-        center={[41.00824, 28.978359]}
-        zoom={12}
+        center={[
+          Data.default.features[0].geometry.coordinates[0][1],
+          Data.default.features[0].geometry.coordinates[0][0],
+        ]}
+        zoom={13}
         doubleClickZoom={true}
         animate={true}
         duration={100}
