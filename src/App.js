@@ -10,9 +10,11 @@ import {
   FeatureGroup,
   GeoJSON,
 } from "react-leaflet";
+import useGeo from "./hooks/useGeo";
 const App = () => {
   const { BaseLayer, Overlay } = LayersControl;
 
+  const location = useGeo();
   console.log("Test data", Data.default.features[0].geometry.coordinates[0]);
 
   return (
