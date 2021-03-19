@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
+import "./Map.css";
 
 import * as Data from "../test.json";
 import {
@@ -15,22 +17,59 @@ import {
 import useGeo from "../hooks/useGeo";
 import useOsmtoGeo from "../hooks/useOsmtoGeo";
 import CustomGeo from "./CustomGeo";
+import GetInstance from "./GetInstance";
+import Message from "../utils/Message";
+import L from "leaflet";
 
 const Map = () => {
   const { BaseLayer, Overlay } = LayersControl;
   const [myLocation, setMyLocation] = useState(false);
   const [opacityOfPoint, setOpacityOfPoint] = useState(0);
+  const [getData, setGetData] = useState(false);
+  const [getCenter, setGetCenter] = useState(true);
+  const magicKingdomLatLng = [28.3852, -81.5639];
+
+  //   const [bbox, setBbox] = useState({
+  //     min_lon: 11.54,
+  //     min_lat: 48.14,
+  //     max_lon: 11.541,
+  //     max_lat: 48.142,
+  //   });
+  //   const [bbox, setBbox] = useState({
+  //     min_lon: 12.54,
+  //     min_lat: 48.14,
+  //     max_lon: 12.541,
+  //     max_lat: 48.142,
+  //   });
   const [bbox, setBbox] = useState({
-    min_lon: 11.54,
+    min_lon: 12.54,
     min_lat: 48.14,
-    max_lon: 11.541,
+    max_lon: 17.541,
     max_lat: 48.142,
   });
-  const location = useGeo();
-  const osmtogeo = useOsmtoGeo(bbox);
+  const [bbox1, setBbox1] = useState({
+    min_lon: "",
+    min_lat: "",
+    max_lon: "",
+    max_lat: "",
+  });
 
-  //   console.log("mapData", osmtogeo[0].geometry);
-  console.log("Test data", Data.default.features[0].geometry.coordinates[0]);
+  const location = useGeo();
+  const osmtogeo = useOsmtoGeo(bbox1, getData);
+  // console.log("mapData", osmtogeo);
+
+  // console.log("mapData", osmtogeo.GeoJSONData);
+  // console.log("mapData", osmtogeo.error);
+  // console.log("mapData", osmtogeo[0].geometry);
+  // console.log("Test data", Data.default.features[0].geometry.coordinates[0]);
+  const handleSubmit = () => {
+    // const osmtogeo = useOsmtoGeo(bbox1);
+    setGetData((prevState) => !prevState);
+    setGetCenter(true);
+  };
+
+  // console.log("bbboox", bbox1);
+  // console.log("bbboox length", bbox1.min_lat.length);
 
   return (
     <>
@@ -50,7 +89,14 @@ const Map = () => {
           [360, 180],
         ]}
       >
-        {/* <GetZoom /> */}
+        {/* <GetInstance /> */}
+        <GetInstance
+          getCenter={getCenter}
+          getData={getData}
+          setGetCenter={setGetCenter}
+          bbox1={bbox1}
+          osmtogeo={osmtogeo}
+        />
         <LayersControl position="topright">
           <BaseLayer checked={true} name="Normal">
             <TileLayer
@@ -64,11 +110,13 @@ const Map = () => {
           <Overlay checked={true} name="Purple - without markers">
             <FeatureGroup>
               {/* <GeoJSON color="purple" data={Data.default.features} /> */}
+
               <CustomGeo
-                color="purple"
                 data={Data.default.features}
                 pointer={opacityOfPoint}
+                className="circle-magic-kingdom"
               />
+
               {/* <CustomGeo
                 color="purple"
                 data={osmtogeo}
@@ -77,7 +125,11 @@ const Map = () => {
             </FeatureGroup>
           </Overlay>
           <Overlay name="Yellow - with markers">
-            <CustomGeo color="yellow" data={Data.default.features} />
+            <CustomGeo
+              color="yellow"
+              data={osmtogeo.length > 0 ? osmtogeo : Data.default.features}
+            />
+
             {/* <CustomGeo color="yellow" data={osmtogeo} /> */}
           </Overlay>
           <Overlay name="Marker with popup">
@@ -97,22 +149,121 @@ const Map = () => {
           ></Marker>
         )}
       </MapContainer>
-      <button
-        // onClick={showMyLocation}
+      <div
         style={{
-          background: "grey",
           zIndex: 999,
           color: "white",
           position: "absolute",
-          bottom: 25,
-          right: 0,
-          width: 120,
-          height: 55,
+          bottom: "15%",
+          left: "17%",
+          width: "70%",
+          cursor: "pointer",
+        }}
+      >
+        <Form inline>
+          <InputGroup className="mb-2 mr-sm-2">
+            <InputGroup.Prepend>
+              <InputGroup.Text>West</InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl
+              placeholder={" 12.54 (min_lon)"}
+              value={bbox1.min_lon}
+              onChange={(e) => setBbox1({ ...bbox1, min_lon: e.target.value })}
+            />
+          </InputGroup>
+          <InputGroup className="mb-2 mr-sm-2">
+            <InputGroup.Prepend>
+              <InputGroup.Text>South</InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl
+              value={bbox1.min_lat}
+              placeholder={" 48.14 (min_lat)"}
+              onChange={(e) => setBbox1({ ...bbox1, min_lat: e.target.value })}
+            />
+          </InputGroup>
+
+          <InputGroup className="mb-2 mr-sm-2">
+            <InputGroup.Prepend>
+              <InputGroup.Text>East</InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl
+              value={bbox1.max_lon}
+              placeholder={" 12.541 (max_lon)"}
+              onChange={(e) => setBbox1({ ...bbox1, max_lon: e.target.value })}
+            />
+          </InputGroup>
+
+          <InputGroup className="mb-2 mr-sm-2">
+            <InputGroup.Prepend>
+              <InputGroup.Text>North</InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl
+              value={bbox1.max_lat}
+              placeholder={" 48.142 (max_lat)"}
+              onChange={(e) => setBbox1({ ...bbox1, max_lat: e.target.value })}
+            />
+          </InputGroup>
+
+          <Button onClick={handleSubmit} className="mb-2">
+            Submit
+          </Button>
+
+          <Form.Check
+            type="checkbox"
+            className="mb-2 mr-sm-2 ml-2"
+            id="inlineFormCheck"
+            label="Remember me"
+            style={{ color: "black" }}
+          />
+        </Form>
+
+        {/* <InputGroup className="mb-3">
+          <InputGroup.Prepend>
+            <InputGroup.Text>(West,South,East,North)</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder={" 12.54 W (min_lon)"}
+            // value={bbox.min_lon}
+            onChange={(e) => setBbox(e.target.value)}
+          />
+          <FormControl
+            // value={bbox.max_lat}
+            placeholder={" 48.14 S (min_lat)"}
+            onChange={(e) => setBbox(e.target.value)}
+          />
+          <FormControl
+            // value={bbox.max_lon}
+            placeholder={" 12.541 E (max_lon)"}
+            onChange={(e) => setBbox(e.target.value)}
+          />
+          <FormControl
+            // value={bbox.max_lat}
+            placeholder={" 48.142 N (max_lat)"}
+            onChange={(e) => setBbox(e.target.value)}
+          />
+        </InputGroup>
+        <Button type="button" className="mb-2">
+          Submit
+        </Button> */}
+      </div>
+
+      <Button
+        className="btn btn-primary"
+        style={{
+          zIndex: 999,
+          color: "white",
+          position: "absolute",
+          bottom: 45,
+          right: 12,
           cursor: "pointer",
         }}
       >
         {myLocation ? "You are here" : "Locate Me"}
-      </button>
+      </Button>
+
+      {osmtogeo.error && (
+        <Message variant={"danger"} children={osmtogeo.error} />
+      )}
     </>
   );
 };
