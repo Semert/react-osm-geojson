@@ -21,7 +21,6 @@ import LocateMe from "./LocateMe";
 import GetLocation from "./GetLocation";
 import Aos from "aos";
 import "aos/dist/aos.css";
-import DrawMap from "./DrawMap";
 
 const Map = () => {
   const { BaseLayer, Overlay } = LayersControl;
