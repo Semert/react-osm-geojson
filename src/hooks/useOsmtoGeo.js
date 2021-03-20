@@ -16,7 +16,12 @@ const useOsmtoGeo = (bbox, getData) => {
       console.log("features", newdata.features);
       setMapData({ GeoJSONData: newdata.features, error: "" });
     } catch (error) {
-      setMapData({ error: error.response.data });
+      console.log(error.response.data.length);
+      const errorMessage =
+        error.response.data.length === 95
+          ? error.response.data.substring(0, 47)
+          : null;
+      setMapData({ error: errorMessage ? errorMessage : error.response.data });
       console.log("ERROR", error.response.data);
     }
   };

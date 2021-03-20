@@ -1,5 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
+import {
+  Button,
+  Form,
+  FormControl,
+  InputGroup,
+  OverlayTrigger,
+  Popover,
+} from "react-bootstrap";
 import "./Map.css";
 
 import * as Data from "../test.json";
@@ -26,8 +33,8 @@ const Map = () => {
   const [myLocation, setMyLocation] = useState(false);
   const [opacityOfPoint, setOpacityOfPoint] = useState(0);
   const [getData, setGetData] = useState(false);
-  const [getCenter, setGetCenter] = useState(true);
-  const magicKingdomLatLng = [28.3852, -81.5639];
+  const [getCenter, setGetCenter] = useState(false);
+  const [isFilled, setIsFilled] = useState(true);
 
   //   const [bbox, setBbox] = useState({
   //     min_lon: 11.54,
@@ -65,12 +72,33 @@ const Map = () => {
   const handleSubmit = () => {
     // const osmtogeo = useOsmtoGeo(bbox1);
     setGetData((prevState) => !prevState);
+    setIsFilled((prevState) => !prevState);
+
     setGetCenter(true);
   };
 
   // console.log("bbboox", bbox1);
   // console.log("bbboox length", bbox1.min_lat.length);
 
+  const handleFill = () => {
+    const newBbox = {
+      min_lon: 12.5,
+      min_lat: 48.14,
+      max_lon: 12.52,
+      max_lat: 48.142,
+    };
+    setBbox1(newBbox);
+  };
+  const popover = (
+    <Popover id="popover-basic">
+      <Popover.Title as="h3">Hey there!</Popover.Title>
+      <Popover.Content>
+        You need to give <strong>bbox</strong> values. (W,S,E,N) For give an
+        example, i filled the inputs for you. Don't forget, the maximum bbox
+        size is <strong>0.25.</strong> It's simple right?
+      </Popover.Content>
+    </Popover>
+  );
   return (
     <>
       <MapContainer
@@ -96,6 +124,7 @@ const Map = () => {
           setGetCenter={setGetCenter}
           bbox1={bbox1}
           osmtogeo={osmtogeo}
+          isFilled={isFilled}
         />
         <LayersControl position="topright">
           <BaseLayer checked={true} name="Normal">
@@ -169,6 +198,7 @@ const Map = () => {
               placeholder={" 12.54 (min_lon)"}
               value={bbox1.min_lon}
               onChange={(e) => setBbox1({ ...bbox1, min_lon: e.target.value })}
+              type="number"
             />
           </InputGroup>
           <InputGroup className="mb-2 mr-sm-2">
@@ -179,6 +209,7 @@ const Map = () => {
               value={bbox1.min_lat}
               placeholder={" 48.14 (min_lat)"}
               onChange={(e) => setBbox1({ ...bbox1, min_lat: e.target.value })}
+              type="number"
             />
           </InputGroup>
 
@@ -190,6 +221,7 @@ const Map = () => {
               value={bbox1.max_lon}
               placeholder={" 12.541 (max_lon)"}
               onChange={(e) => setBbox1({ ...bbox1, max_lon: e.target.value })}
+              type="number"
             />
           </InputGroup>
 
@@ -201,50 +233,23 @@ const Map = () => {
               value={bbox1.max_lat}
               placeholder={" 48.142 (max_lat)"}
               onChange={(e) => setBbox1({ ...bbox1, max_lat: e.target.value })}
+              type="number"
             />
           </InputGroup>
 
           <Button onClick={handleSubmit} className="mb-2">
             Submit
           </Button>
-
-          <Form.Check
-            type="checkbox"
-            className="mb-2 mr-sm-2 ml-2"
-            id="inlineFormCheck"
-            label="Remember me"
-            style={{ color: "black" }}
-          />
+          <OverlayTrigger trigger="click" placement="top" overlay={popover}>
+            <Button
+              variant="success"
+              className="mb-2 ml-2"
+              onClick={handleFill}
+            >
+              Do you need help?
+            </Button>
+          </OverlayTrigger>
         </Form>
-
-        {/* <InputGroup className="mb-3">
-          <InputGroup.Prepend>
-            <InputGroup.Text>(West,South,East,North)</InputGroup.Text>
-          </InputGroup.Prepend>
-          <FormControl
-            placeholder={" 12.54 W (min_lon)"}
-            // value={bbox.min_lon}
-            onChange={(e) => setBbox(e.target.value)}
-          />
-          <FormControl
-            // value={bbox.max_lat}
-            placeholder={" 48.14 S (min_lat)"}
-            onChange={(e) => setBbox(e.target.value)}
-          />
-          <FormControl
-            // value={bbox.max_lon}
-            placeholder={" 12.541 E (max_lon)"}
-            onChange={(e) => setBbox(e.target.value)}
-          />
-          <FormControl
-            // value={bbox.max_lat}
-            placeholder={" 48.142 N (max_lat)"}
-            onChange={(e) => setBbox(e.target.value)}
-          />
-        </InputGroup>
-        <Button type="button" className="mb-2">
-          Submit
-        </Button> */}
       </div>
 
       <Button
@@ -261,8 +266,12 @@ const Map = () => {
         {myLocation ? "You are here" : "Locate Me"}
       </Button>
 
-      {osmtogeo.error && (
-        <Message variant={"danger"} children={osmtogeo.error} />
+      {osmtogeo.error.length === 88 ? (
+        <Message variant={"info"} children={osmtogeo.error} />
+      ) : (
+        osmtogeo.error && (
+          <Message variant={"danger"} children={osmtogeo.error} />
+        )
       )}
     </>
   );
