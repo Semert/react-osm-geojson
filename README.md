@@ -11,7 +11,7 @@ In the project directory, First :
 This app uses OpenStreetMap api to gather information in "osm" format, convert it to "GeoJSON" and properly display the dataset.
 The app provides you use the features efficiently with given examples. 
 
-If you would like, it is possible to have a map in 3 different styles for you to test it in the top right. (Normal,Dark,Nasa). You are able to use the "Locate Me" feature to be able to show where you are.Besides you can search countries,cities, even streets to find wherever you want.
+If you would like, it is possible to have a map in 3 different styles for you to test it in the top right. (Normal,Dark,Nasa). You are able to use the "Locate Me" feature to be able to show where you are. Besides you can search countries,cities, even streets to find wherever you want.
 
 It was very fun from my side to build this app. I hope you will have fun as much as me while using the app.
 
