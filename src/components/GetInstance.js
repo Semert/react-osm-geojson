@@ -18,7 +18,6 @@ const CustomReactPopup = ({ keyValues }) => {
       >
         <ListGroup variant="flush">
           <ListGroup.Item>
-            {" "}
             <b>{keyValues[0].value[index]} </b> : {keyValues[0].key[index]}
           </ListGroup.Item>
         </ListGroup>
@@ -26,23 +25,10 @@ const CustomReactPopup = ({ keyValues }) => {
     ));
 };
 
-function GetInstance({
-  bbox1,
-  osmtogeo,
-  getCenter,
-  setGetCenter,
-  getData,
-  isFilled,
-}) {
+function GetInstance({ bbox1, osmtogeo, getCenter, setGetCenter, getData }) {
   const mapInstance = useMap();
 
   useEffect(() => {
-    // const bounds = mapInstance.getBounds();
-    // console.log("bounds", bounds);
-
-    console.log("Use EFFECT");
-
-    console.log(osmtogeo);
     if (!mapInstance) return;
 
     if (osmtogeo?.GeoJSONData?.length > 0 && osmtogeo.error.length <= 0) {
@@ -86,10 +72,6 @@ function GetInstance({
           setGetCenter(false);
         }, 1500);
       }
-
-      // setTimeout(() => {
-      //   geoJson.remove(mapInstance);
-      // }, 3000);
 
       osmtogeo.GeoJSONData.length = 0;
     }

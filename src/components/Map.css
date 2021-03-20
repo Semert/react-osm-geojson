@@ -8,6 +8,14 @@
 .circle-magic-kingdom:hover {
   stroke-width: 12px;
 }
+.locate-me-button {
+  z-index: 9999;
+  color: white;
+  position: absolute;
+  bottom: 45px;
+  right: 12px;
+  cursor: pointer;
+}
 
 @keyframes AnimationMap {
   0% {

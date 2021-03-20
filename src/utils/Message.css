@@ -10,4 +10,26 @@
   font-size: 19px;
   box-shadow: 5px 5px grey;
   transform: translate(-50%, -50%);
+  animation: AnimationText 1s;
+}
+
+@keyframes AnimationText {
+  0% {
+    opacity: 0.2;
+  }
+  28% {
+    opacity: 0.3;
+  }
+  43% {
+    opacity: 0.5;
+  }
+  71% {
+    opacity: 0.6;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
 }

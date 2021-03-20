@@ -12,16 +12,13 @@ const useOsmtoGeo = (bbox, getData) => {
         `https://api.openstreetmap.org/api/0.6/map?bbox=${bbox.min_lon},${bbox.min_lat},${bbox.max_lon},${bbox.max_lat}`
       );
       const newdata = osmtogeojson(data2.data);
-      console.log("features", newdata.features);
       setMapData({ GeoJSONData: newdata.features, error: "" });
     } catch (error) {
-      console.log(error.response.data.length);
       const errorMessage =
         error.response.data.length === 95
           ? error.response.data.substring(0, 47)
           : null;
       setMapData({ error: errorMessage ? errorMessage : error.response.data });
-      console.log("ERROR", error.response.data);
     }
   };
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
 import "./Map.css";
 
-import * as Data from "../test.json";
+import * as easterEgg from "../utils/easterEgg.json";
 import {
   MapContainer,
   TileLayer,
@@ -10,17 +10,18 @@ import {
   Popup,
   LayersControl,
   FeatureGroup,
-  GeoJSON,
-  Marker,
-  useMap,
 } from "react-leaflet";
 import useGeo from "../hooks/useGeo";
 import useOsmtoGeo from "../hooks/useOsmtoGeo";
 import CustomGeo from "./CustomGeo";
 import GetInstance from "./GetInstance";
 import Message from "../utils/Message";
-import Popover from "../utils/Popover";
-import L from "leaflet";
+import Popovers from "../utils/Popovers";
+import LocateMe from "./LocateMe";
+import GetLocation from "./GetLocation";
+import Aos from "aos";
+import "aos/dist/aos.css";
+import DrawMap from "./DrawMap";
 
 const Map = () => {
   const { BaseLayer, Overlay } = LayersControl;
@@ -30,18 +31,6 @@ const Map = () => {
   const [getCenter, setGetCenter] = useState(false);
   const [isFilled, setIsFilled] = useState(true);
 
-  //   const [bbox, setBbox] = useState({
-  //     min_lon: 11.54,
-  //     min_lat: 48.14,
-  //     max_lon: 11.541,
-  //     max_lat: 48.142,
-  //   });
-  //   const [bbox, setBbox] = useState({
-  //     min_lon: 12.54,
-  //     min_lat: 48.14,
-  //     max_lon: 12.541,
-  //     max_lat: 48.142,
-  //   });
   const [bbox, setBbox] = useState({
     min_lon: 12.54,
     min_lat: 48.14,
@@ -57,9 +46,11 @@ const Map = () => {
 
   const location = useGeo();
   const osmtogeo = useOsmtoGeo(bbox1, getData);
-  // console.log("mapData", osmtogeo);
-  // console.log("mapData", osmtogeo[0].geometry);
-  // console.log("Test data", Data.default.features[0].geometry.coordinates[0]);
+
+  useEffect(() => {
+    Aos.init({ duration: 3000 });
+  }, []);
+
   const handleSubmit = () => {
     setGetData((prevState) => !prevState);
     setIsFilled((prevState) => !prevState);
@@ -77,14 +68,15 @@ const Map = () => {
     setBbox1(newBbox);
   };
 
+  const handleLocate = () => {
+    setMyLocation((prevState) => !prevState);
+  };
+
   return (
     <>
       <MapContainer
-        center={[
-          Data.default.features[0].geometry.coordinates[0][1],
-          Data.default.features[0].geometry.coordinates[0][0],
-        ]}
-        zoom={13}
+        center={[52.535927, 13.418123]}
+        zoom={17}
         doubleClickZoom={true}
         animate={true}
         duration={100}
@@ -95,7 +87,6 @@ const Map = () => {
           [360, 180],
         ]}
       >
-        {/* <GetInstance /> */}
         <GetInstance
           getCenter={getCenter}
           getData={getData}
@@ -104,6 +95,8 @@ const Map = () => {
           osmtogeo={osmtogeo}
           isFilled={isFilled}
         />
+        <LocateMe location={location} myLocation={myLocation} />
+        <GetLocation />
         <LayersControl position="topright">
           <BaseLayer checked={true} name="Normal">
             <TileLayer
@@ -114,47 +107,38 @@ const Map = () => {
           <BaseLayer name="Dark">
             <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png" />
           </BaseLayer>
-          <Overlay checked={true} name="Purple - without markers">
-            <FeatureGroup>
-              {/* <GeoJSON color="purple" data={Data.default.features} /> */}
 
+          <BaseLayer name="NASA Gibs Blue Marble">
+            <TileLayer
+              url="https://gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default//EPSG3857_500m/{z}/{y}/{x}.jpeg"
+              attribution="&copy; NASA Blue Marble, image service by OpenGeo"
+              maxNativeZoom={8}
+            />
+          </BaseLayer>
+
+          <Overlay checked={true} name="Star">
+            <FeatureGroup>
               <CustomGeo
-                data={Data.default.features}
+                data={easterEgg.default.features}
                 pointer={opacityOfPoint}
                 className="circle-magic-kingdom"
               />
-
-              {/* <CustomGeo
-                color="purple"
-                data={osmtogeo}
-                pointer={opacityOfPoint}
-              /> */}
             </FeatureGroup>
           </Overlay>
-          <Overlay name="Yellow - with markers">
-            <CustomGeo
-              color="yellow"
-              data={osmtogeo.length > 0 ? osmtogeo : Data.default.features}
-            />
+          {/* <FeatureGroup>
+            <DrawMap />
+          </FeatureGroup> */}
 
-            {/* <CustomGeo color="yellow" data={osmtogeo} /> */}
-          </Overlay>
-          <Overlay name="Marker with popup">
+          <Overlay name="Circle">
             <CircleMarker
-              center={[41.00824, 28.978359]}
+              center={[52.535927, 13.418123]}
               color="red"
               radius={20}
             >
-              <Popup>Popup in CircleMarker</Popup>
+              <Popup>Hey There!</Popup>
             </CircleMarker>
           </Overlay>
         </LayersControl>
-
-        {location.isLoaded && !location.error && (
-          <Marker
-            position={[location.coordinates.lat, location.coordinates.lng]}
-          ></Marker>
-        )}
       </MapContainer>
       <div
         style={{
@@ -167,21 +151,21 @@ const Map = () => {
           cursor: "pointer",
         }}
       >
-        <Form inline>
+        <Form inline data-aos="fade-up">
           <InputGroup className="mb-2 mr-sm-2">
             <InputGroup.Prepend>
-              <InputGroup.Text>West</InputGroup.Text>
+              <InputGroup.Text>N</InputGroup.Text>
             </InputGroup.Prepend>
             <FormControl
-              placeholder={" 12.54 (min_lon)"}
-              value={bbox1.min_lon}
-              onChange={(e) => setBbox1({ ...bbox1, min_lon: e.target.value })}
+              value={bbox1.max_lat}
+              placeholder={" 48.142 (max_lat)"}
+              onChange={(e) => setBbox1({ ...bbox1, max_lat: e.target.value })}
               type="number"
             />
           </InputGroup>
           <InputGroup className="mb-2 mr-sm-2">
             <InputGroup.Prepend>
-              <InputGroup.Text>South</InputGroup.Text>
+              <InputGroup.Text>S</InputGroup.Text>
             </InputGroup.Prepend>
             <FormControl
               value={bbox1.min_lat}
@@ -193,7 +177,7 @@ const Map = () => {
 
           <InputGroup className="mb-2 mr-sm-2">
             <InputGroup.Prepend>
-              <InputGroup.Text>East</InputGroup.Text>
+              <InputGroup.Text>E</InputGroup.Text>
             </InputGroup.Prepend>
             <FormControl
               value={bbox1.max_lon}
@@ -205,35 +189,30 @@ const Map = () => {
 
           <InputGroup className="mb-2 mr-sm-2">
             <InputGroup.Prepend>
-              <InputGroup.Text>North</InputGroup.Text>
+              <InputGroup.Text>W</InputGroup.Text>
             </InputGroup.Prepend>
             <FormControl
-              value={bbox1.max_lat}
-              placeholder={" 48.142 (max_lat)"}
-              onChange={(e) => setBbox1({ ...bbox1, max_lat: e.target.value })}
+              placeholder={" 12.54 (min_lon)"}
+              value={bbox1.min_lon}
+              onChange={(e) => setBbox1({ ...bbox1, min_lon: e.target.value })}
               type="number"
             />
           </InputGroup>
-
           <Button onClick={handleSubmit} className="mb-2">
             Submit
           </Button>
-          <Popover handleFill={handleFill} />
+          <Popovers handleFill={handleFill} />
         </Form>
       </div>
 
       <Button
-        className="btn btn-primary"
-        style={{
-          zIndex: 999,
-          color: "white",
-          position: "absolute",
-          bottom: 45,
-          right: 12,
-          cursor: "pointer",
-        }}
+        className={`locate-me-button btn ${
+          location?.error ? "btn-danger" : "btn-primary"
+        }`}
+        onClick={handleLocate}
+        disabled={location?.error && true}
       >
-        {myLocation ? "You are here" : "Locate Me"}
+        {!location?.error ? "Locate Me" : "Locate Me Disabled"}
       </Button>
 
       {osmtogeo.error.length === 88 ? (

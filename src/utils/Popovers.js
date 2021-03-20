@@ -1,14 +1,14 @@
 import React from "react";
-import { Button, OverlayTrigger } from "react-bootstrap";
+import { Button, OverlayTrigger, Popover } from "react-bootstrap";
 
-const Popover = ({ handleFill }) => {
+const Popovers = ({ handleFill }) => {
   const popover = (
     <Popover id="popover-basic">
       <Popover.Title as="h3">Hey there!</Popover.Title>
       <Popover.Content>
-        You need to give <strong>bbox</strong> values. (W,S,E,N) For give an
-        example, i've filled the inputs for you. Don't forget, the maximum bbox
-        size is <strong>0.25.</strong> It's simple right?
+        You need to give <strong>bbox</strong> values. (North,South,East,West).
+        For give an example, i've filled the inputs for you. Don't forget, the
+        maximum bbox size is <strong>0.25.</strong> It's simple right?
       </Popover.Content>
     </Popover>
   );
@@ -21,4 +21,4 @@ const Popover = ({ handleFill }) => {
   );
 };
 
-export default Popover;
+export default Popovers;
