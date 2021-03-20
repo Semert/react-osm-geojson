@@ -14,7 +14,11 @@ const Popovers = ({ handleFill }) => {
   );
   return (
     <OverlayTrigger trigger="click" placement="top" overlay={popover}>
-      <Button variant="success" className="mb-2 ml-2" onClick={handleFill}>
+      <Button
+        variant="success"
+        className="mb-2 ml-2 mobile-button"
+        onClick={handleFill}
+      >
         Do you need help?
       </Button>
     </OverlayTrigger>

@@ -7,7 +7,7 @@ const CustomGeo = (props) => {
   function addData(layer, jsonData) {
     layer.addData(jsonData);
   }
-  function onEachFeature(feature, layer) {
+  const onEachFeature = (feature, layer) => {
     if (layer.feature.geometry.type === "Point") {
       if (props.pointer === 0) {
         layer.options.opacity = props.pointer;
@@ -15,7 +15,7 @@ const CustomGeo = (props) => {
         layer.bindPopup(`${"No marker"}`);
       }
     }
-  }
+  };
   useEffect(() => {
     const layer = layerRef.current;
     addData(layer, props.data);

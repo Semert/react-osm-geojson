@@ -4,7 +4,6 @@ import osmtogeojson from "osmtogeojson";
 
 const useOsmtoGeo = (bbox, getData) => {
   const [mapData, setMapData] = useState({ GeoJSONData: [], error: "" });
-  // "https://api.openstreetmap.org/api/0.6/map?bbox=11.54,48.14,11.541,48.142"
 
   const fetchData = async () => {
     try {

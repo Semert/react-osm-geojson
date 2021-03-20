@@ -52,7 +52,7 @@ const BboxValues = ({ bbox, setBbox, handleFill, handleSubmit }) => {
             type="number"
           />
         </InputGroup>
-        <Button onClick={handleSubmit} className="mb-2">
+        <Button onClick={handleSubmit} className="mb-2 mobile-button">
           Submit
         </Button>
         <Popovers handleFill={handleFill} />

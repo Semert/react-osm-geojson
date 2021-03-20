@@ -40,18 +40,12 @@
     left: 50%;
     font-size: 14px;
     box-shadow: 3px 3px grey;
-    animation: AnimationText 1s;
   }
 }
 
 @media only screen and (max-width: 600px) {
   .help-message {
-    position: absolute;
-    bottom: 83%;
+    bottom: 80%;
     left: 50%;
-    font-size: 14px;
-    box-shadow: 3px 3px grey;
-    transform: translate(-50%, -50%);
-    animation: AnimationText 1s;
   }
 }

@@ -54,8 +54,11 @@
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
   .locate-me-button {
     font-size: 14px;
+  }
+  .mobile-button {
+    font-size: 15px;
   }
 }

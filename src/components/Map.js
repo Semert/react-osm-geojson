@@ -46,10 +46,10 @@ const Map = () => {
 
   const handleFill = () => {
     const newBbox = {
-      min_lon: 12.5,
+      min_lon: 11.54,
       min_lat: 48.14,
-      max_lon: 12.52,
-      max_lat: 48.142,
+      max_lon: 11.541,
+      max_lat: 48.141,
     };
     setBbox(newBbox);
   };
@@ -76,6 +76,7 @@ const Map = () => {
           [-360, -180],
           [360, 180],
         ]}
+        attribution={"Mert Efe"}
       >
         <GetInstance
           getCenter={getCenter}
@@ -90,18 +91,21 @@ const Map = () => {
         <LayersControl position="topright">
           <BaseLayer checked={true} name="Normal">
             <TileLayer
-              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors &amp; Mert Efe '
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
           </BaseLayer>
           <BaseLayer name="Dark">
-            <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png" />
+            <TileLayer
+              attribution="Mert Efe"
+              url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png"
+            />
           </BaseLayer>
 
           <BaseLayer name="NASA Gibs Blue Marble">
             <TileLayer
               url="https://gibs-{s}.earthdata.nasa.gov/wmts/epsg3857/best/BlueMarble_ShadedRelief_Bathymetry/default//EPSG3857_500m/{z}/{y}/{x}.jpeg"
-              attribution="&copy; NASA Blue Marble, image service by OpenGeo"
+              attribution="&copy; NASA Blue Marble, image service by OpenGeo  &amp; Mert Efe"
               maxNativeZoom={8}
             />
           </BaseLayer>

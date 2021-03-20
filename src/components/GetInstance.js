@@ -25,7 +25,7 @@ const CustomReactPopup = ({ keyValues }) => {
     ));
 };
 
-function GetInstance({ bbox, osmtogeo, getCenter, setGetCenter, getData }) {
+const GetInstance = ({ bbox, osmtogeo, getCenter, setGetCenter, getData }) => {
   const mapInstance = useMap();
 
   useEffect(() => {
@@ -77,6 +77,6 @@ function GetInstance({ bbox, osmtogeo, getCenter, setGetCenter, getData }) {
   }, [getData, getCenter, osmtogeo, bbox]);
 
   return null;
-}
+};
 
 export default GetInstance;
