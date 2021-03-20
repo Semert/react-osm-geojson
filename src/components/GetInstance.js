@@ -4,9 +4,8 @@ import { useEffect } from "react";
 import { Card, ListGroup } from "react-bootstrap";
 import ReactDOMServer from "react-dom/server";
 
-const CustomReactPopup = ({ abc2 }) => {
-  // Array(abc2[0].key.length)
-  const maxLen = abc2[0].key.length > 5 ? 7 : 5;
+const CustomReactPopup = ({ keyValues }) => {
+  const maxLen = keyValues[0].key.length > 5 ? 7 : 5;
   return Array(maxLen)
     .fill(0)
     .map((x, index) => (
@@ -20,7 +19,7 @@ const CustomReactPopup = ({ abc2 }) => {
         <ListGroup variant="flush">
           <ListGroup.Item>
             {" "}
-            <b>{abc2[0].value[index]} </b> : {abc2[0].key[index]}
+            <b>{keyValues[0].value[index]} </b> : {keyValues[0].key[index]}
           </ListGroup.Item>
         </ListGroup>
       </Card>
@@ -37,8 +36,6 @@ function GetInstance({
 }) {
   const mapInstance = useMap();
 
-  console.log("get Center", getCenter);
-
   useEffect(() => {
     // const bounds = mapInstance.getBounds();
     // console.log("bounds", bounds);
@@ -49,28 +46,30 @@ function GetInstance({
     if (!mapInstance) return;
 
     if (osmtogeo?.GeoJSONData?.length > 0 && osmtogeo.error.length <= 0) {
-      const parksGeoJson = new L.GeoJSON(osmtogeo.GeoJSONData, {
+      const geoJson = new L.GeoJSON(osmtogeo.GeoJSONData, {
         onEachFeature: (feature = {}, layer) => {
           const { properties = {} } = feature;
           const { name } = properties;
-          const bardak = [properties].map((val) => {
+          const valuesOfProp = [properties].map((val) => {
             return [{ key: Object.values(val), value: Object.keys(val) }];
           });
 
-          const abc2 = bardak.map((x) => x[0]);
+          const keyValues = valuesOfProp.map((x) => x[0]);
 
           layer
             .bindPopup(
-              ReactDOMServer.renderToString(<CustomReactPopup abc2={abc2} />)
+              ReactDOMServer.renderToString(
+                <CustomReactPopup keyValues={keyValues} />
+              )
             )
             .openPopup();
         },
       });
 
-      parksGeoJson.setStyle({ className: "circle-magic-kingdom" });
+      geoJson.setStyle({ className: "circle-magic-kingdom" });
 
       setTimeout(() => {
-        parksGeoJson.addTo(mapInstance);
+        geoJson.addTo(mapInstance);
       }, 700);
 
       if (
@@ -89,12 +88,9 @@ function GetInstance({
       }
 
       // setTimeout(() => {
-      //   parksGeoJson.remove(mapInstance);
+      //   geoJson.remove(mapInstance);
       // }, 3000);
 
-      // setTimeout(() => {
-      //   parksGeoJson.remove(mapInstance);
-      // }, 3000);
       osmtogeo.GeoJSONData.length = 0;
     }
   }, [getData, getCenter, osmtogeo]);

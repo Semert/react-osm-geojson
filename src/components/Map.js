@@ -1,12 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-  Button,
-  Form,
-  FormControl,
-  InputGroup,
-  OverlayTrigger,
-  Popover,
-} from "react-bootstrap";
+import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
 import "./Map.css";
 
 import * as Data from "../test.json";
@@ -26,6 +19,7 @@ import useOsmtoGeo from "../hooks/useOsmtoGeo";
 import CustomGeo from "./CustomGeo";
 import GetInstance from "./GetInstance";
 import Message from "../utils/Message";
+import Popover from "../utils/Popover";
 import L from "leaflet";
 
 const Map = () => {
@@ -64,21 +58,14 @@ const Map = () => {
   const location = useGeo();
   const osmtogeo = useOsmtoGeo(bbox1, getData);
   // console.log("mapData", osmtogeo);
-
-  // console.log("mapData", osmtogeo.GeoJSONData);
-  // console.log("mapData", osmtogeo.error);
   // console.log("mapData", osmtogeo[0].geometry);
   // console.log("Test data", Data.default.features[0].geometry.coordinates[0]);
   const handleSubmit = () => {
-    // const osmtogeo = useOsmtoGeo(bbox1);
     setGetData((prevState) => !prevState);
     setIsFilled((prevState) => !prevState);
 
     setGetCenter(true);
   };
-
-  // console.log("bbboox", bbox1);
-  // console.log("bbboox length", bbox1.min_lat.length);
 
   const handleFill = () => {
     const newBbox = {
@@ -89,16 +76,7 @@ const Map = () => {
     };
     setBbox1(newBbox);
   };
-  const popover = (
-    <Popover id="popover-basic">
-      <Popover.Title as="h3">Hey there!</Popover.Title>
-      <Popover.Content>
-        You need to give <strong>bbox</strong> values. (W,S,E,N) For give an
-        example, i filled the inputs for you. Don't forget, the maximum bbox
-        size is <strong>0.25.</strong> It's simple right?
-      </Popover.Content>
-    </Popover>
-  );
+
   return (
     <>
       <MapContainer
@@ -240,15 +218,7 @@ const Map = () => {
           <Button onClick={handleSubmit} className="mb-2">
             Submit
           </Button>
-          <OverlayTrigger trigger="click" placement="top" overlay={popover}>
-            <Button
-              variant="success"
-              className="mb-2 ml-2"
-              onClick={handleFill}
-            >
-              Do you need help?
-            </Button>
-          </OverlayTrigger>
+          <Popover handleFill={handleFill} />
         </Form>
       </div>
 

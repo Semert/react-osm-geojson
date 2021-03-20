@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import osmtogeojson from "osmtogeojson";
 
@@ -12,7 +12,6 @@ const useOsmtoGeo = (bbox, getData) => {
         `https://api.openstreetmap.org/api/0.6/map?bbox=${bbox.min_lon},${bbox.min_lat},${bbox.max_lon},${bbox.max_lat}`
       );
       const newdata = osmtogeojson(data2.data);
-      console.log("new", newdata);
       console.log("features", newdata.features);
       setMapData({ GeoJSONData: newdata.features, error: "" });
     } catch (error) {
