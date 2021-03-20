@@ -3,8 +3,8 @@ https://mert-efe-geojson.netlify.app/
 
 ![mert-gif](https://user-images.githubusercontent.com/44974863/111880604-7f26b700-89bd-11eb-9dfb-583cb8965f47.gif)
 
-The app uses OpenStreetMap api to gather information in "osm" format, convert it to "GeoJSON" and properly display the dataset.
-The app provides you use the features efficiently with given examples. 
+The app uses OpenStreetMap api to gather information in "osm" format, convert it to "GeoJSON" and properly display the dataset. (Web and Mobile responsive)
+The app provides you use the features efficiently with given examples.  
 
 If you would like, it is possible to have a map in 3 different styles for you to test it in the top right. (Normal,Dark,Nasa). You are able to use the "Locate Me" feature to be able to show where you are. Besides you can search countries,cities, even streets to find wherever you want.
 
