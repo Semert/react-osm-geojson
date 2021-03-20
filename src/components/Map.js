@@ -1,8 +1,15 @@
-import React, { useEffect, useState, useRef } from "react";
-import { Button, Form, FormControl, InputGroup } from "react-bootstrap";
-import "./Map.css";
-
+import React, { useEffect, useState } from "react";
 import * as easterEgg from "../utils/easterEgg.json";
+import useGeo from "../hooks/useGeo";
+import useOsmtoGeo from "../hooks/useOsmtoGeo";
+import CustomGeo from "./CustomGeo";
+import GetInstance from "./GetInstance";
+import Message from "../utils/Message";
+import LocateMe from "./LocateMe";
+import GetLocation from "./GetLocation";
+import BboxValues from "./BboxValues";
+import Aos from "aos";
+import { Button } from "react-bootstrap";
 import {
   MapContainer,
   TileLayer,
@@ -11,32 +18,17 @@ import {
   LayersControl,
   FeatureGroup,
 } from "react-leaflet";
-import useGeo from "../hooks/useGeo";
-import useOsmtoGeo from "../hooks/useOsmtoGeo";
-import CustomGeo from "./CustomGeo";
-import GetInstance from "./GetInstance";
-import Message from "../utils/Message";
-import Popovers from "../utils/Popovers";
-import LocateMe from "./LocateMe";
-import GetLocation from "./GetLocation";
-import Aos from "aos";
 import "aos/dist/aos.css";
+import "./Map.css";
 
 const Map = () => {
   const { BaseLayer, Overlay } = LayersControl;
   const [myLocation, setMyLocation] = useState(false);
-  const [opacityOfPoint, setOpacityOfPoint] = useState(0);
+  const [opacityOfPoint] = useState(0);
   const [getData, setGetData] = useState(false);
   const [getCenter, setGetCenter] = useState(false);
   const [isFilled, setIsFilled] = useState(true);
-
   const [bbox, setBbox] = useState({
-    min_lon: 12.54,
-    min_lat: 48.14,
-    max_lon: 17.541,
-    max_lat: 48.142,
-  });
-  const [bbox1, setBbox1] = useState({
     min_lon: "",
     min_lat: "",
     max_lon: "",
@@ -44,16 +36,11 @@ const Map = () => {
   });
 
   const location = useGeo();
-  const osmtogeo = useOsmtoGeo(bbox1, getData);
-
-  useEffect(() => {
-    Aos.init({ duration: 3000 });
-  }, []);
+  const osmtogeo = useOsmtoGeo(bbox, getData);
 
   const handleSubmit = () => {
     setGetData((prevState) => !prevState);
     setIsFilled((prevState) => !prevState);
-
     setGetCenter(true);
   };
 
@@ -64,12 +51,16 @@ const Map = () => {
       max_lon: 12.52,
       max_lat: 48.142,
     };
-    setBbox1(newBbox);
+    setBbox(newBbox);
   };
 
   const handleLocate = () => {
     setMyLocation((prevState) => !prevState);
   };
+
+  useEffect(() => {
+    Aos.init({ duration: 2500 });
+  }, []);
 
   return (
     <>
@@ -90,7 +81,7 @@ const Map = () => {
           getCenter={getCenter}
           getData={getData}
           setGetCenter={setGetCenter}
-          bbox1={bbox1}
+          bbox={bbox}
           osmtogeo={osmtogeo}
           isFilled={isFilled}
         />
@@ -124,10 +115,6 @@ const Map = () => {
               />
             </FeatureGroup>
           </Overlay>
-          {/* <FeatureGroup>
-            <DrawMap />
-          </FeatureGroup> */}
-
           <Overlay name="Circle">
             <CircleMarker
               center={[52.535927, 13.418123]}
@@ -139,70 +126,13 @@ const Map = () => {
           </Overlay>
         </LayersControl>
       </MapContainer>
-      <div
-        style={{
-          zIndex: 999,
-          color: "white",
-          position: "absolute",
-          bottom: "15%",
-          left: "17%",
-          width: "70%",
-          cursor: "pointer",
-        }}
-      >
-        <Form inline data-aos="fade-up">
-          <InputGroup className="mb-2 mr-sm-2">
-            <InputGroup.Prepend>
-              <InputGroup.Text>N</InputGroup.Text>
-            </InputGroup.Prepend>
-            <FormControl
-              value={bbox1.max_lat}
-              placeholder={" 48.142 (max_lat)"}
-              onChange={(e) => setBbox1({ ...bbox1, max_lat: e.target.value })}
-              type="number"
-            />
-          </InputGroup>
-          <InputGroup className="mb-2 mr-sm-2">
-            <InputGroup.Prepend>
-              <InputGroup.Text>S</InputGroup.Text>
-            </InputGroup.Prepend>
-            <FormControl
-              value={bbox1.min_lat}
-              placeholder={" 48.14 (min_lat)"}
-              onChange={(e) => setBbox1({ ...bbox1, min_lat: e.target.value })}
-              type="number"
-            />
-          </InputGroup>
 
-          <InputGroup className="mb-2 mr-sm-2">
-            <InputGroup.Prepend>
-              <InputGroup.Text>E</InputGroup.Text>
-            </InputGroup.Prepend>
-            <FormControl
-              value={bbox1.max_lon}
-              placeholder={" 12.541 (max_lon)"}
-              onChange={(e) => setBbox1({ ...bbox1, max_lon: e.target.value })}
-              type="number"
-            />
-          </InputGroup>
-
-          <InputGroup className="mb-2 mr-sm-2">
-            <InputGroup.Prepend>
-              <InputGroup.Text>W</InputGroup.Text>
-            </InputGroup.Prepend>
-            <FormControl
-              placeholder={" 12.54 (min_lon)"}
-              value={bbox1.min_lon}
-              onChange={(e) => setBbox1({ ...bbox1, min_lon: e.target.value })}
-              type="number"
-            />
-          </InputGroup>
-          <Button onClick={handleSubmit} className="mb-2">
-            Submit
-          </Button>
-          <Popovers handleFill={handleFill} />
-        </Form>
-      </div>
+      <BboxValues
+        bbox={bbox}
+        handleFill={handleFill}
+        handleSubmit={handleSubmit}
+        setBbox={setBbox}
+      />
 
       <Button
         className={`locate-me-button btn ${

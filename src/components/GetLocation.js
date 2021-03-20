@@ -19,7 +19,7 @@ const GetLocation = () => {
     control.getContainer().onclick = () => {
       mapInstance.setZoom(3);
     };
-  }, []);
+  }, [mapInstance]);
 
   const handleOnSearchResuts = (data) => {
     setCoor(data.latlng);

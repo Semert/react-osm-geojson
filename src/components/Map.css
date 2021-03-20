@@ -10,10 +10,20 @@
 }
 .locate-me-button {
   z-index: 9999;
-  color: white;
+  color: chartreuse;
   position: absolute;
   bottom: 45px;
   right: 12px;
+  cursor: pointer;
+}
+
+.bbox-form {
+  z-index: 999;
+  color: white;
+  position: absolute;
+  bottom: 15%;
+  left: 17%;
+  width: 70%;
   cursor: pointer;
 }
 
@@ -41,5 +51,11 @@
   }
   100% {
     stroke: red;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .locate-me-button {
+    font-size: 14px;
   }
 }

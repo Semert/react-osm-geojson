@@ -18,7 +18,7 @@ const LocateMe = ({ location, myLocation }) => {
     } else if (location?.error?.message !== undefined && myLocation) {
       alert(location?.error?.message);
     }
-  }, [myLocation, location]);
+  }, [myLocation, location, mapInstance]);
 
   return (
     <>

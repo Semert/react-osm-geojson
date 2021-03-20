@@ -25,7 +25,7 @@ const CustomReactPopup = ({ keyValues }) => {
     ));
 };
 
-function GetInstance({ bbox1, osmtogeo, getCenter, setGetCenter, getData }) {
+function GetInstance({ bbox, osmtogeo, getCenter, setGetCenter, getData }) {
   const mapInstance = useMap();
 
   useEffect(() => {
@@ -35,7 +35,6 @@ function GetInstance({ bbox1, osmtogeo, getCenter, setGetCenter, getData }) {
       const geoJson = new L.GeoJSON(osmtogeo.GeoJSONData, {
         onEachFeature: (feature = {}, layer) => {
           const { properties = {} } = feature;
-          const { name } = properties;
           const valuesOfProp = [properties].map((val) => {
             return [{ key: Object.values(val), value: Object.keys(val) }];
           });
@@ -59,14 +58,14 @@ function GetInstance({ bbox1, osmtogeo, getCenter, setGetCenter, getData }) {
       }, 700);
 
       if (
-        bbox1.min_lon > 0 &&
-        bbox1.min_lat > 0 &&
-        bbox1.max_lat > 0 &&
-        bbox1.max_lon > 0 &&
+        bbox.min_lon &&
+        bbox.min_lat &&
+        bbox.max_lat &&
+        bbox.max_lon &&
         getCenter
       ) {
         setTimeout(() => {
-          mapInstance.flyTo([bbox1.min_lat, bbox1.min_lon], 14, {
+          mapInstance.flyTo([bbox.min_lat, bbox.min_lon], 14, {
             duration: 3,
           });
           setGetCenter(false);
@@ -75,7 +74,7 @@ function GetInstance({ bbox1, osmtogeo, getCenter, setGetCenter, getData }) {
 
       osmtogeo.GeoJSONData.length = 0;
     }
-  }, [getData, getCenter, osmtogeo]);
+  }, [getData, getCenter, osmtogeo, bbox]);
 
   return null;
 }

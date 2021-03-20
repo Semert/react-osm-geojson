@@ -12,7 +12,7 @@ const CustomGeo = (props) => {
       if (props.pointer === 0) {
         layer.options.opacity = props.pointer;
       } else {
-        layer.bindPopup(`${"Selam"}`);
+        layer.bindPopup(`${"No marker"}`);
       }
     }
   }

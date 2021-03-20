@@ -3,11 +3,7 @@ import "./App.css";
 import Map from "./components/Map.js";
 
 const App = () => {
-  return (
-    <div className="App">
-      <Map></Map>
-    </div>
-  );
+  return <Map />;
 };
 
 export default App;

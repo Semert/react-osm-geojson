@@ -6,7 +6,7 @@
   left: 50%;
   cursor: pointer;
   color: black;
-  font-weight: bold;
+  font-weight: lighter;
   font-size: 19px;
   box-shadow: 5px 5px grey;
   transform: translate(-50%, -50%);
@@ -31,5 +31,27 @@
   }
   100% {
     opacity: 1;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .help-message {
+    bottom: 0%;
+    left: 50%;
+    font-size: 14px;
+    box-shadow: 3px 3px grey;
+    animation: AnimationText 1s;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .help-message {
+    position: absolute;
+    bottom: 83%;
+    left: 50%;
+    font-size: 14px;
+    box-shadow: 3px 3px grey;
+    transform: translate(-50%, -50%);
+    animation: AnimationText 1s;
   }
 }
