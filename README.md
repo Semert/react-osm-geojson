@@ -1,7 +1,7 @@
 https://mert-efe-geojson.netlify.app/
 
 
-![mert-project](https://user-images.githubusercontent.com/44974863/111880067-4802d680-89ba-11eb-9aaf-5a11ae88337f.gif)
+![mert-gif](https://user-images.githubusercontent.com/44974863/111880604-7f26b700-89bd-11eb-9dfb-583cb8965f47.gif)
 
 The app uses OpenStreetMap api to gather information in "osm" format, convert it to "GeoJSON" and properly display the dataset.
 The app provides you use the features efficiently with given examples. 
