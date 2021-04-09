@@ -21,5 +21,4 @@ In the project directory, First :
 ## How to use it 
 You need to give bbox values like North,South,East,West. "N" needs to be greater than "S" as well as" E" needs to be greater than "W". After given values, the map will fly to that destination. You can click over the map and get even more details. That's all. The rest of the information explained in the app clearly.
 
-
 USED API => https://www.openstreetmap.org/api/0.6/map
